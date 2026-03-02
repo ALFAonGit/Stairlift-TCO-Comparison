@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stairlift Price Comparison Tool</title>
+<style>
+  body { 
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 40px; 
+    color: #333; 
+    background-color: #f9f9f9;
+  }
+  .container { 
+    max-width: 900px; 
+    margin: auto; 
+    background: #fff; 
+    padding: 40px; 
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-bottom: 40px; 
+  }
+  th, td { 
+    border: 1px solid #000; 
+    padding: 12px; 
+    text-align: center; 
+    vertical-align: top;
+  }
+  th { 
+    background-color: #f4f4f4; 
+    font-size: 1.1em; 
+    font-weight: bold;
+  }
+  .row-header { 
+    font-weight: bold; 
+    text-align: left; 
+    background-color: #f9f9f9; 
+    width: 25%;
+  }
+  
+  [contenteditable="true"]:hover {
+    background-color: #f0f8ff;
+    outline: 1px dashed #0066cc;
+  }
+  [contenteditable="true"]:focus {
+    background-color: #e6f2ff;
+    outline: 2px solid #0066cc;
+  }
+
+  .bottom-section { 
+    border: 2px solid #000; 
+    padding: 30px; 
+    background-color: #fafafa; 
+  }
+  .bottom-header { 
+    text-align: center; 
+    margin-bottom: 30px; 
+  }
+  .bottom-header h2 { margin: 0; font-size: 1.5em; letter-spacing: 1px; }
+  .bottom-header h3 { margin: 5px 0 0 0; color: #555; font-weight: normal; }
+  
+  .form-row { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 15px; 
+    border-bottom: 1px dotted #ccc;
+    padding-bottom: 5px;
+  }
+  .form-row .label { 
+    font-weight: bold; 
+    flex: 1; 
+  }
+  .form-row .value { 
+    flex: 2; 
+    padding: 5px;
+    min-height: 24px;
+  }
+  .inline-group { 
+    flex: 2; 
+    display: flex; 
+    align-items: center; 
+  }
+  .inline-group .value { flex: 1; }
+  .inline-group .label { flex: 0 0 auto; margin: 0 15px; }
+
+  .total-row {
+    margin-top: 30px;
+    border-bottom: none;
+    font-size: 1.2em;
+  }
+
+  @media print {
+    body { padding: 0; background-color: #fff; }
+    .container { padding: 0; box-shadow: none; max-width: 100%; }
+    [contenteditable="true"]:hover, [contenteditable="true"]:focus { outline: none; background-color: transparent; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <table>
+    <thead>
+      <tr>
+        <th contenteditable="true">FEATURE</th>
+        <th contenteditable="true">ACORN STAIRLIFTS</th>
+        <th contenteditable="true">BRUNO</th>
+        <th contenteditable="true">LEAF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row-header" contenteditable="true">UNIT PRICE</td>
+        <td contenteditable="true">$$</td>
+        <td contenteditable="true">$</td>
+        <td contenteditable="true">$$$</td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">MAX WEIGHT</td>
+        <td contenteditable="true">225lbs</td>
+        <td contenteditable="true">250lbs</td>
+        <td contenteditable="true">300lbs-600lbs</td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">TRACK LENGTH</td>
+        <td contenteditable="true">10 feet</td>
+        <td contenteditable="true">10 feet</td>
+        <td contenteditable="true">15 feet</td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">AVERAGE COST OF UNIT</td>
+        <td contenteditable="true">$3,500-$4,500<br>plus tax plus install</td>
+        <td contenteditable="true">$4,500-$5,500<br>plus tax plus install</td>
+        <td contenteditable="true">$7,500-$8,500</td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">PER FOOT COST</td>
+        <td contenteditable="true">$400/foot</td>
+        <td contenteditable="true">$500/foot</td>
+        <td contenteditable="true">$800/foot</td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">WARRANTY</td>
+        <td contenteditable="true">1 year warranty</td>
+        <td contenteditable="true">2 year warranty</td>
+        <td contenteditable="true">Lifetime Warranty</td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">WARRANTY COST</td>
+        <td contenteditable="true">$600-$800 per year</td>
+        <td contenteditable="true">$600-$800 per year<br>Zero Cost</td>
+        <td contenteditable="true"></td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">SERVICE COST</td>
+        <td contenteditable="true">$75-$100 per service</td>
+        <td contenteditable="true">$75-$100 per service<br>Zero Cost per call</td>
+        <td contenteditable="true"></td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">MATERIALS</td>
+        <td contenteditable="true">Chain & Sprocket</td>
+        <td contenteditable="true">Belt & Pulley</td>
+        <td contenteditable="true">Patented Nylon Polymer - Worm Drive - Built in Saftey Sensors</td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">MAINTIENCE SCHEDULE</td>
+        <td contenteditable="true">Lubricate every 2-4 months</td>
+        <td contenteditable="true">Lubricate every 3-6 months</td>
+        <td contenteditable="true">Maintience Free</td>
+      </tr>
+      <tr>
+        <td class="row-header" contenteditable="true">BATTERY REPLACEMENT</td>
+        <td contenteditable="true">$250/battery</td>
+        <td contenteditable="true">$250/battery</td>
+        <td contenteditable="true">$28/battery</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-section">
+    <div class="bottom-header">
+      <h2 contenteditable="true">HOME SAFETY SOLUTIONS™</h2>
+      <h3 contenteditable="true">YOUR HOME</h3>
+    </div>
+    
+    <div class="form-row">
+      <div class="label" contenteditable="true">TRACK LENGTH NEEDED</div>
+      <div class="value" contenteditable="true"></div>
+    </div>
+    <div class="form-row">
+      <div class="label" contenteditable="true">COST OF UNIT</div>
+      <div class="value" contenteditable="true">$</div>
+    </div>
+    <div class="form-row">
+      <div class="label" contenteditable="true">COST OF EXTRA TRACK</div>
+      <div class="value" contenteditable="true">$</div>
+    </div>
+    <div class="form-row">
+      <div class="label" contenteditable="true">TOTAL COST OF WARRANTY</div>
+      <div class="inline-group">
+        <div class="value" contenteditable="true">$</div>
+        <div class="label" contenteditable="true">YEARS</div>
+        <div class="value" contenteditable="true"></div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="label" contenteditable="true">EXTRAS</div>
+      <div class="value" contenteditable="true">$</div>
+    </div>
+    <div class="form-row total-row">
+      <div class="label" contenteditable="true" style="font-size: 1.1em;">TOTAL COST OF OWNERSHIP</div>
+      <div class="value" contenteditable="true" style="font-weight: bold;">$</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
