@@ -2,64 +2,86 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Stairlift Price Comparison Tool</title>
 <style>
-  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
-  .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+  /* Base Styles */
+  body { font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f6; padding: 10px; color: #333; margin: 0; }
+  .container { max-width: 1200px; margin: 0 auto; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
   
-  .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  h1 { color: #2c3e50; margin: 0; }
-  
-  /* Buttons */
-  .btn { padding: 10px 20px; font-size: 1em; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: background 0.3s; }
+  /* Header & Buttons */
+  .header-container { display: flex; flex-direction: column; gap: 15px; text-align: center; margin-bottom: 20px; align-items: center; }
+  h1 { color: #2c3e50; margin: 0; font-size: 1.5em; }
+  .btn { padding: 12px 24px; font-size: 1em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s; width: 100%; max-width: 300px; }
   .btn-reset { background-color: #e74c3c; color: white; }
-  .btn-reset:hover { background-color: #c0392b; }
-
-  /* Control Bar Styles */
-  .control-bar { background-color: #e8f4f8; padding: 20px; border-radius: 8px; border: 1px solid #bce0fd; display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; }
-  .control-group { display: flex; flex-direction: column; align-items: flex-start; }
+  
+  /* Top Control Bar - Stacked for Mobile */
+  .control-bar { background-color: #e8f4f8; padding: 15px; border-radius: 8px; border: 1px solid #bce0fd; display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+  .control-group { display: flex; flex-direction: column; width: 100%; }
   .control-group label { font-size: 0.9em; font-weight: bold; color: #2980b9; margin-bottom: 5px; }
-  .control-group input { padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; width: 180px; text-align: center; font-size: 1.1em; }
+  .control-group input { padding: 12px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 1.1em; box-sizing: border-box; width: 100%; text-align: left; }
 
-  /* Table Styles */
-  table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
-  th, td { padding: 10px 15px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; vertical-align: middle; }
-  th { background-color: #2c3e50; color: white; text-transform: uppercase; font-size: 0.9em; text-align: center; width: 25%; }
-  th:first-child { width: 25%; text-align: left; background-color: #34495e; vertical-align: bottom; }
+  /* Responsive Table Wrapper */
+  .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #ddd; border-radius: 6px; position: relative; }
   
-  /* Logos inside headers */
-  .company-logo { height: 40px; display: block; margin: 0 auto 10px auto; background: white; padding: 5px; border-radius: 4px; object-fit: contain; }
-
-  /* Input Styles within Table */
-  td input { width: 90%; padding: 8px; border: 1px solid transparent; background: transparent; text-align: center; font-size: 1em; color: #333; transition: all 0.2s; }
-  td input:hover, td input:focus { background: #f9f9f9; border: 1px solid #3498db; outline: none; border-radius: 4px; }
+  /* Table Styles - Enforcing Minimum Widths to Prevent Squishing */
+  table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
+  th, td { padding: 12px 10px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; vertical-align: middle; text-align: center; }
   
-  /* Editable Left Column Labels */
-  td.label-col { background-color: #f8f9fa; }
-  td.label-col input { font-weight: bold; color: #444; text-align: left; width: 100%; }
+  /* Sticky Left Column */
+  th:first-child, td:first-child { 
+    position: sticky; 
+    left: 0; 
+    z-index: 2; 
+    background-color: #f8f9fa; 
+    border-right: 2px solid #bdc3c7; 
+    text-align: left;
+    width: 30%;
+  }
+  th { background-color: #2c3e50; color: white; text-transform: uppercase; font-size: 0.85em; }
+  th:first-child { background-color: #34495e; z-index: 3; vertical-align: bottom; }
+  
+  /* Logos */
+  .company-logo { height: 35px; display: block; margin: 0 auto 8px auto; background: white; padding: 4px; border-radius: 4px; object-fit: contain; }
 
-  /* Section Dividers */
-  .section-header td { background-color: #e2e8f0; font-weight: bold; text-align: center; color: #2c3e50; padding: 15px; font-size: 1.1em; }
+  /* Input Fields inside Table */
+  td input { width: 100%; padding: 10px 5px; border: 1px solid transparent; background: transparent; text-align: center; font-size: 1em; color: #333; box-sizing: border-box; border-radius: 4px; }
+  td input:focus { background: #fff; border: 1px solid #3498db; outline: none; }
+  td.label-col input { font-weight: bold; color: #444; text-align: left; }
 
-  /* Bottom Totals Section */
+  /* Formatting Totals Rows with Sticky Column Overrides */
+  .section-header td { background-color: #e2e8f0; font-weight: bold; text-align: center; color: #2c3e50; padding: 15px; font-size: 1em; position: static; z-index: 1; border-right: none; }
+  
   .totals-row td { background-color: #ecf0f1; border-top: 1px solid #bdc3c7; }
-  .grand-total td { background-color: #27ae60; color: white; border-top: 2px solid #1e8449; }
-  .grand-total input { color: white; font-weight: bold; font-size: 1.2em; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-  .grand-total td.label-col input { color: white; font-size: 1.2em; }
+  .totals-row td:first-child { background-color: #e8ecee; } /* Slightly darker for the sticky label */
   
+  .grand-total td { background-color: #27ae60; color: white; border-top: 2px solid #1e8449; }
+  .grand-total td:first-child { background-color: #229954; } /* Match the sticky label to the green row */
+  .grand-total input, .grand-total td.label-col input { color: white; font-weight: bold; font-size: 1.15em; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+
+  /* Adjustments for iPad (Tablet size and up) */
+  @media (min-width: 768px) {
+    body { padding: 20px; }
+    .container { padding: 30px; }
+    .header-container { flex-direction: row; justify-content: space-between; text-align: left; }
+    .btn { width: auto; }
+    .control-bar { flex-direction: row; justify-content: space-between; gap: 20px; }
+    .control-group input { width: 100%; text-align: center; }
+  }
+
   /* Print Styles */
   @media print {
     body { padding: 0; background: white; }
-    .container { box-shadow: none; padding: 0; }
-    input { border: none !important; background: transparent !important; }
-    .control-bar { border: 1px solid #ccc; background: none; }
-    th { background-color: #ccc !important; color: black !important; }
+    .container { box-shadow: none; padding: 0; max-width: 100%; }
     .btn { display: none; }
-    .section-header td { background-color: #eee !important; color: black !important; }
+    .table-wrapper { overflow: visible; border: none; }
+    table { min-width: 100%; }
+    th:first-child, td:first-child { position: static; border-right: 1px solid #eee; }
+    input { border: none !important; background: transparent !important; }
+    .control-bar { border: 1px solid #ccc; background: none; flex-direction: row; }
+    th { background-color: #ccc !important; color: black !important; }
     .grand-total td { background-color: #ddd !important; color: black !important; }
     .grand-total input, .grand-total td.label-col input { color: black !important; text-shadow: none; }
-    .company-logo { border: 1px solid #ccc; }
   }
 </style>
 </head>
@@ -67,7 +89,7 @@
 
 <div class="container">
   <div class="header-container">
-    <h1>Stairlift Price Comparison Tool</h1>
+    <h1>Stairlift Comparison</h1>
     <button class="btn btn-reset" onclick="newCustomer()">+ New Customer</button>
   </div>
 
@@ -86,145 +108,146 @@
     </div>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>COMPARISON FACTORS</th>
-        <th>
-          <img src="https://logo.clearbit.com/acornstairlifts.com" alt="Acorn Logo" class="company-logo" onerror="this.style.display='none'">
-          ACORN STAIRLIFTS
-        </th>
-        <th>
-          <img src="https://logo.clearbit.com/bruno.com" alt="Bruno Logo" class="company-logo" onerror="this.style.display='none'">
-          BRUNO INDEPENDENT
-        </th>
-        <th>
-          <img src="https://logo.clearbit.com/leafhome.com" alt="Leaf Home Logo" class="company-logo" onerror="this.style.display='none'">
-          LEAF HOME SAFETY
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_1" value="Unit Type"></td>
-        <td><input type="text" class="saveable" id="acorn_type" value="130 Straight"></td>
-        <td><input type="text" class="saveable" id="bruno_type" value="Elan SRE-3050"></td>
-        <td><input type="text" class="saveable" id="leaf_type" value="Leaf Straight"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_2" value="Base Cost of Unit ($)"></td>
-        <td><input type="number" class="saveable" id="acorn_unit" value="3200"></td>
-        <td><input type="number" class="saveable" id="bruno_unit" value="3600"></td>
-        <td><input type="number" class="saveable" id="leaf_unit" value="3200"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_3" value="Cost of Installation ($)"></td>
-        <td><input type="number" class="saveable" id="acorn_install" value="650"></td>
-        <td><input type="number" class="saveable" id="bruno_install" value="600"></td>
-        <td><input type="number" class="saveable" id="leaf_install" value="0"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_4" value="Standard Track Included (ft)"></td>
-        <td><input type="number" class="saveable" id="acorn_std_track" value="15"></td>
-        <td><input type="number" class="saveable" id="bruno_std_track" value="16"></td>
-        <td><input type="number" class="saveable" id="leaf_std_track" value="15"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_5" value="Cost of Extra Track ($/ft)"></td>
-        <td><input type="number" class="saveable" id="acorn_track_price" value="125"></td>
-        <td><input type="number" class="saveable" id="bruno_track_price" value="100"></td>
-        <td><input type="number" class="saveable" id="leaf_track_price" value="130"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_6" value="Standard Warranty (Desc)"></td>
-        <td><input type="text" class="saveable" id="acorn_war_desc" value="1 Year Limited"></td>
-        <td><input type="text" class="saveable" id="bruno_war_desc" value="2 Yr Part / Life Motor"></td>
-        <td><input type="text" class="saveable" id="leaf_war_desc" value="1 Year Limited"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_7" value="Included Warranty (Years)"></td>
-        <td><input type="number" class="saveable" id="acorn_std_years" value="1"></td>
-        <td><input type="number" class="saveable" id="bruno_std_years" value="2"></td>
-        <td><input type="number" class="saveable" id="leaf_std_years" value="1"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_8" value="Ext. Warranty Cost ($/yr)"></td>
-        <td><input type="number" class="saveable" id="acorn_war_price" value="350"></td>
-        <td><input type="number" class="saveable" id="bruno_war_price" value="0"></td>
-        <td><input type="number" class="saveable" id="leaf_war_price" value="400"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_9" value="Est. Annual Service Fees ($)"></td>
-        <td><input type="number" class="saveable" id="acorn_service_fee" value="250"></td>
-        <td><input type="number" class="saveable" id="bruno_service_fee" value="150"></td>
-        <td><input type="number" class="saveable" id="leaf_service_fee" value="200"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_10" value="Replacement Battery Cost ($)"></td>
-        <td><input type="number" class="saveable" id="acorn_battery_price" value="150"></td>
-        <td><input type="number" class="saveable" id="bruno_battery_price" value="165"></td>
-        <td><input type="number" class="saveable" id="leaf_battery_price" value="200"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_11" value="Battery Lifespan (Years)"></td>
-        <td><input type="number" class="saveable" id="acorn_battery_life" value="3"></td>
-        <td><input type="number" class="saveable" id="bruno_battery_life" value="3"></td>
-        <td><input type="number" class="saveable" id="leaf_battery_life" value="3"></td>
-      </tr>
-      <tr>
-        <td class="label-col"><input type="text" class="saveable" id="label_12" value="Rec. Maintenance Schedule"></td>
-        <td><input type="text" class="saveable" id="acorn_maint_desc" value="Lube 2-4 Months"></td>
-        <td><input type="text" class="saveable" id="bruno_maint_desc" value="Lube 3-6 Months"></td>
-        <td><input type="text" class="saveable" id="leaf_maint_desc" value="Low Maintenance"></td>
-      </tr>
-      
-      <tr class="section-header">
-        <td colspan="4">TOTAL COST OF OWNERSHIP BREAKDOWN</td>
-      </tr>
-      <tr class="totals-row">
-        <td class="label-col"><input type="text" class="saveable" id="label_tot_1" value="Hardware & Installation"></td>
-        <td><input type="text" id="acorn_bot_unit" readonly></td>
-        <td><input type="text" id="bruno_bot_unit" readonly></td>
-        <td><input type="text" id="leaf_bot_unit" readonly></td>
-      </tr>
-      <tr class="totals-row">
-        <td class="label-col"><input type="text" class="saveable" id="label_tot_2" value="Cost of Extra Track"></td>
-        <td><input type="text" id="acorn_bot_track" readonly></td>
-        <td><input type="text" id="bruno_bot_track" readonly></td>
-        <td><input type="text" id="leaf_bot_track" readonly></td>
-      </tr>
-      <tr class="totals-row">
-        <td class="label-col"><input type="text" class="saveable" id="label_tot_3" value="Extended Warranty"></td>
-        <td><input type="text" id="acorn_bot_war" readonly></td>
-        <td><input type="text" id="bruno_bot_war" readonly></td>
-        <td><input type="text" id="leaf_bot_war" readonly></td>
-      </tr>
-      <tr class="totals-row">
-        <td class="label-col"><input type="text" class="saveable" id="label_tot_4" value="Maintenance & Batteries"></td>
-        <td><input type="text" id="acorn_bot_maint" readonly></td>
-        <td><input type="text" id="bruno_bot_maint" readonly></td>
-        <td><input type="text" id="leaf_bot_maint" readonly></td>
-      </tr>
-      <tr class="totals-row">
-        <td class="label-col"><input type="text" class="saveable" id="label_tot_5" value="Extras ($ Options)"></td>
-        <td><input type="number" class="saveable" id="acorn_extras" value="0" placeholder="$0"></td>
-        <td><input type="number" class="saveable" id="bruno_extras" value="0" placeholder="$0"></td>
-        <td><input type="number" class="saveable" id="leaf_extras" value="0" placeholder="$0"></td>
-      </tr>
-      <tr class="grand-total">
-        <td class="label-col"><input type="text" class="saveable" id="label_tot_6" value="TOTAL COST OF OWNERSHIP"></td>
-        <td><input type="text" id="acorn_bot_total" readonly></td>
-        <td><input type="text" id="bruno_bot_total" readonly></td>
-        <td><input type="text" id="leaf_bot_total" readonly></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>COMPARISON FACTORS</th>
+          <th>
+            <img src="https://logo.clearbit.com/acornstairlifts.com" alt="Acorn Logo" class="company-logo" onerror="this.style.display='none'">
+            ACORN STAIRLIFTS
+          </th>
+          <th>
+            <img src="https://logo.clearbit.com/bruno.com" alt="Bruno Logo" class="company-logo" onerror="this.style.display='none'">
+            BRUNO INDEPENDENT
+          </th>
+          <th>
+            <img src="https://logo.clearbit.com/leafhome.com" alt="Leaf Home Logo" class="company-logo" onerror="this.style.display='none'">
+            LEAF HOME SAFETY
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_1" value="Unit Type"></td>
+          <td><input type="text" class="saveable" id="acorn_type" value="130 Straight"></td>
+          <td><input type="text" class="saveable" id="bruno_type" value="Elan SRE-3050"></td>
+          <td><input type="text" class="saveable" id="leaf_type" value="Leaf Straight"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_2" value="Base Cost of Unit ($)"></td>
+          <td><input type="number" class="saveable" id="acorn_unit" value="3200"></td>
+          <td><input type="number" class="saveable" id="bruno_unit" value="3600"></td>
+          <td><input type="number" class="saveable" id="leaf_unit" value="3200"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_3" value="Cost of Installation ($)"></td>
+          <td><input type="number" class="saveable" id="acorn_install" value="650"></td>
+          <td><input type="number" class="saveable" id="bruno_install" value="600"></td>
+          <td><input type="number" class="saveable" id="leaf_install" value="0"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_4" value="Standard Track Included (ft)"></td>
+          <td><input type="number" class="saveable" id="acorn_std_track" value="15"></td>
+          <td><input type="number" class="saveable" id="bruno_std_track" value="16"></td>
+          <td><input type="number" class="saveable" id="leaf_std_track" value="15"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_5" value="Cost of Extra Track ($/ft)"></td>
+          <td><input type="number" class="saveable" id="acorn_track_price" value="125"></td>
+          <td><input type="number" class="saveable" id="bruno_track_price" value="100"></td>
+          <td><input type="number" class="saveable" id="leaf_track_price" value="130"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_6" value="Standard Warranty"></td>
+          <td><input type="text" class="saveable" id="acorn_war_desc" value="1 Year Limited"></td>
+          <td><input type="text" class="saveable" id="bruno_war_desc" value="2 Yr Part / Life Motor"></td>
+          <td><input type="text" class="saveable" id="leaf_war_desc" value="1 Year Limited"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_7" value="Included Warranty (Years)"></td>
+          <td><input type="number" class="saveable" id="acorn_std_years" value="1"></td>
+          <td><input type="number" class="saveable" id="bruno_std_years" value="2"></td>
+          <td><input type="number" class="saveable" id="leaf_std_years" value="1"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_8" value="Ext. Warranty Cost ($/yr)"></td>
+          <td><input type="number" class="saveable" id="acorn_war_price" value="350"></td>
+          <td><input type="number" class="saveable" id="bruno_war_price" value="0"></td>
+          <td><input type="number" class="saveable" id="leaf_war_price" value="400"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_9" value="Est. Annual Service ($)"></td>
+          <td><input type="number" class="saveable" id="acorn_service_fee" value="250"></td>
+          <td><input type="number" class="saveable" id="bruno_service_fee" value="150"></td>
+          <td><input type="number" class="saveable" id="leaf_service_fee" value="200"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_10" value="Replacement Battery ($)"></td>
+          <td><input type="number" class="saveable" id="acorn_battery_price" value="150"></td>
+          <td><input type="number" class="saveable" id="bruno_battery_price" value="165"></td>
+          <td><input type="number" class="saveable" id="leaf_battery_price" value="200"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_11" value="Battery Lifespan (Years)"></td>
+          <td><input type="number" class="saveable" id="acorn_battery_life" value="3"></td>
+          <td><input type="number" class="saveable" id="bruno_battery_life" value="3"></td>
+          <td><input type="number" class="saveable" id="leaf_battery_life" value="3"></td>
+        </tr>
+        <tr>
+          <td class="label-col"><input type="text" class="saveable" id="label_12" value="Maintenance Schedule"></td>
+          <td><input type="text" class="saveable" id="acorn_maint_desc" value="Lube 2-4 Months"></td>
+          <td><input type="text" class="saveable" id="bruno_maint_desc" value="Lube 3-6 Months"></td>
+          <td><input type="text" class="saveable" id="leaf_maint_desc" value="Low Maint."></td>
+        </tr>
+        
+        <tr class="section-header">
+          <td colspan="4">TOTAL COST OF OWNERSHIP BREAKDOWN</td>
+        </tr>
+        <tr class="totals-row">
+          <td class="label-col"><input type="text" class="saveable" id="label_tot_1" value="Hardware & Install"></td>
+          <td><input type="text" id="acorn_bot_unit" readonly></td>
+          <td><input type="text" id="bruno_bot_unit" readonly></td>
+          <td><input type="text" id="leaf_bot_unit" readonly></td>
+        </tr>
+        <tr class="totals-row">
+          <td class="label-col"><input type="text" class="saveable" id="label_tot_2" value="Cost of Extra Track"></td>
+          <td><input type="text" id="acorn_bot_track" readonly></td>
+          <td><input type="text" id="bruno_bot_track" readonly></td>
+          <td><input type="text" id="leaf_bot_track" readonly></td>
+        </tr>
+        <tr class="totals-row">
+          <td class="label-col"><input type="text" class="saveable" id="label_tot_3" value="Extended Warranty"></td>
+          <td><input type="text" id="acorn_bot_war" readonly></td>
+          <td><input type="text" id="bruno_bot_war" readonly></td>
+          <td><input type="text" id="leaf_bot_war" readonly></td>
+        </tr>
+        <tr class="totals-row">
+          <td class="label-col"><input type="text" class="saveable" id="label_tot_4" value="Maint. & Batteries"></td>
+          <td><input type="text" id="acorn_bot_maint" readonly></td>
+          <td><input type="text" id="bruno_bot_maint" readonly></td>
+          <td><input type="text" id="leaf_bot_maint" readonly></td>
+        </tr>
+        <tr class="totals-row">
+          <td class="label-col"><input type="text" class="saveable" id="label_tot_5" value="Extras ($ Options)"></td>
+          <td><input type="number" class="saveable" id="acorn_extras" value="0" placeholder="$0"></td>
+          <td><input type="number" class="saveable" id="bruno_extras" value="0" placeholder="$0"></td>
+          <td><input type="number" class="saveable" id="leaf_extras" value="0" placeholder="$0"></td>
+        </tr>
+        <tr class="grand-total">
+          <td class="label-col"><input type="text" class="saveable" id="label_tot_6" value="TOTAL COST"></td>
+          <td><input type="text" id="acorn_bot_total" readonly></td>
+          <td><input type="text" id="bruno_bot_total" readonly></td>
+          <td><input type="text" id="leaf_bot_total" readonly></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-  // FORMATTING
   function formatMoney(number) {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(number);
   }
 
   function getVal(id) {
@@ -232,13 +255,11 @@
     return val ? parseFloat(val) : 0;
   }
 
-  // MATH & CALCULATIONS
   function calculateAll() {
     let length = getVal('jobLength');
     let years = getVal('jobYears');
 
     ['acorn', 'bruno', 'leaf'].forEach(prefix => {
-      // Get all inputs
       let unitPrice = getVal(prefix + '_unit');
       let installPrice = getVal(prefix + '_install');
       let stdTrack = getVal(prefix + '_std_track');
@@ -246,34 +267,25 @@
       let stdYears = getVal(prefix + '_std_years');
       let warPrice = getVal(prefix + '_war_price');
       
-      // Maintenance & Batteries
       let annualService = getVal(prefix + '_service_fee');
       let batteryPrice = getVal(prefix + '_battery_price');
       let batteryLife = getVal(prefix + '_battery_life');
       let extras = getVal(prefix + '_extras');
 
-      // 1. Hardware Base Cost
       let totalUnit = unitPrice + installPrice;
-      
-      // 2. Extra Track Cost
       let extraFeet = Math.max(0, length - stdTrack);
       let costTrack = extraFeet * trackPrice;
       
-      // 3. Warranty Cost
       let extraYears = Math.max(0, years - stdYears);
       let costWar = extraYears * warPrice;
 
-      // 4. Maintenance & Battery Cost over X years
       let lifetimeServiceCost = annualService * years;
-      // Calculate how many times battery needs replacing (e.g. 5 years / 3 year life = 1 replacement)
       let batteryReplacements = batteryLife > 0 ? Math.floor(years / batteryLife) : 0;
       let lifetimeBatteryCost = batteryReplacements * batteryPrice;
       let costMaintAndBatt = lifetimeServiceCost + lifetimeBatteryCost;
 
-      // 5. Grand Total
       let grandTotal = totalUnit + costTrack + costWar + costMaintAndBatt + extras;
 
-      // Update Bottom Section Fields visually
       document.getElementById(prefix + '_bot_unit').value = formatMoney(totalUnit);
       document.getElementById(prefix + '_bot_track').value = formatMoney(costTrack);
       document.getElementById(prefix + '_bot_war').value = formatMoney(costWar);
@@ -281,20 +293,16 @@
       document.getElementById(prefix + '_bot_total').value = formatMoney(grandTotal);
     });
     
-    saveData(); // Save every time a calculation runs
+    saveData();
   }
 
-  // SAVING TO LOCAL STORAGE (AUTO-SAVE)
   function saveData() {
     let inputs = document.querySelectorAll('.saveable');
     inputs.forEach(input => {
-      if(input.id) {
-        localStorage.setItem(input.id, input.value);
-      }
+      if(input.id) { localStorage.setItem(input.id, input.value); }
     });
   }
 
-  // LOADING FROM LOCAL STORAGE ON START
   function loadData() {
     let inputs = document.querySelectorAll('.saveable');
     inputs.forEach(input => {
@@ -305,7 +313,6 @@
     calculateAll();
   }
 
-  // NEW CUSTOMER RESET BUTTON
   function newCustomer() {
     if(confirm("Start new customer? This will clear the name, track length, and extras, but keep all your saved base prices.")) {
       document.getElementById('customer_name').value = '';
@@ -318,13 +325,11 @@
     }
   }
 
-  // EVENT LISTENERS
   let allInputs = document.querySelectorAll('input');
   allInputs.forEach(input => {
     input.addEventListener('input', calculateAll);
   });
 
-  // RUN ON PAGE LOAD
   window.onload = loadData;
 
 </script>
