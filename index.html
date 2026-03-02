@@ -2,31 +2,106 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>Stairlift Price Comparison Tool</title>
 <style>
-  /* Base Styles */
-  body { font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f6; padding: 10px; color: #333; margin: 0; }
-  .container { max-width: 1200px; margin: 0 auto; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+  /* Global Lock to prevent horizontal bleeding */
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; 
+  }
+
+  body, html { 
+    margin: 0; 
+    padding: 0; 
+    width: 100%; 
+    overflow-x: hidden; /* Stops the whole page from sliding side-to-side */
+    font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+    background-color: #f0f2f5; 
+    color: #333; 
+  }
   
-  /* Header & Buttons */
-  .header-container { display: flex; flex-direction: column; gap: 15px; text-align: center; margin-bottom: 20px; align-items: center; }
-  h1 { color: #2c3e50; margin: 0; font-size: 1.5em; }
-  .btn { padding: 12px 24px; font-size: 1em; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s; width: 100%; max-width: 300px; }
+  .container { 
+    width: 100%; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 15px; 
+    background: white; 
+    min-height: 100vh;
+  }
+  
+  /* Header & Buttons - Stacked on Mobile */
+  .header-container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    margin-bottom: 25px; 
+    align-items: center; 
+  }
+  h1 { 
+    color: #1a2b3c; 
+    margin: 0; 
+    font-size: 1.7em; 
+    text-align: center;
+    line-height: 1.2;
+  }
+  .btn { 
+    width: 100%; 
+    padding: 14px 20px; 
+    font-size: 1.1em; 
+    font-weight: bold; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    transition: background 0.3s; 
+  }
   .btn-reset { background-color: #e74c3c; color: white; }
   
-  /* Top Control Bar - Stacked for Mobile */
-  .control-bar { background-color: #e8f4f8; padding: 15px; border-radius: 8px; border: 1px solid #bce0fd; display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
-  .control-group { display: flex; flex-direction: column; width: 100%; }
+  /* Top Control Bar - Stacked on Mobile */
+  .control-bar { 
+    display: grid; 
+    grid-template-columns: 1fr; /* Forces 1 column vertically on phones */
+    gap: 15px; 
+    background-color: #e8f4f8; 
+    padding: 15px; 
+    border-radius: 8px; 
+    border: 1px solid #bce0fd; 
+    margin-bottom: 25px; 
+  }
+  .control-group { display: flex; flex-direction: column; }
   .control-group label { font-size: 0.9em; font-weight: bold; color: #2980b9; margin-bottom: 5px; }
-  .control-group input { padding: 12px; border: 1px solid #bdc3c7; border-radius: 6px; font-size: 1.1em; box-sizing: border-box; width: 100%; text-align: left; }
+  .control-group input { 
+    width: 100%; 
+    padding: 14px; 
+    border: 1px solid #bdc3c7; 
+    border-radius: 6px; 
+    font-size: 16px; /* Exactly 16px stops iPhone auto-zoom */
+    background: #fff;
+  }
 
-  /* Responsive Table Wrapper */
-  .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #ddd; border-radius: 6px; position: relative; }
+  /* Responsive Table Wrapper - This creates the internal scrolling */
+  .table-wrapper { 
+    width: 100%; 
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; /* Smooth momentum scrolling for iOS */
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    box-shadow: inset -5px 0 10px -10px rgba(0,0,0,0.15); /* Hint that there is more to scroll */
+  }
   
-  /* Table Styles - Enforcing Minimum Widths to Prevent Squishing */
-  table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
-  th, td { padding: 12px 10px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; vertical-align: middle; text-align: center; }
+  /* Table Styles */
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    min-width: 800px; /* Forces the table to be wide so it scrolls properly */
+  }
+  th, td { 
+    padding: 12px 10px; 
+    border-bottom: 1px solid #eee; 
+    border-right: 1px solid #eee; 
+    vertical-align: middle; 
+    text-align: center; 
+  }
   
   /* Sticky Left Column */
   th:first-child, td:first-child { 
@@ -36,60 +111,55 @@
     background-color: #f8f9fa; 
     border-right: 2px solid #bdc3c7; 
     text-align: left;
-    width: 30%;
+    width: 160px; /* Fixed width so it doesn't crush the labels */
   }
   th { background-color: #2c3e50; color: white; text-transform: uppercase; font-size: 0.85em; }
   th:first-child { background-color: #34495e; z-index: 3; vertical-align: bottom; }
   
-  /* Logos */
   .company-logo { height: 35px; display: block; margin: 0 auto 8px auto; background: white; padding: 4px; border-radius: 4px; object-fit: contain; }
 
   /* Input Fields inside Table */
-  td input { width: 100%; padding: 10px 5px; border: 1px solid transparent; background: transparent; text-align: center; font-size: 1em; color: #333; box-sizing: border-box; border-radius: 4px; }
+  td input { 
+    width: 100%; 
+    min-width: 110px; /* Prevents columns from shrinking to zero */
+    padding: 10px 5px; 
+    border: 1px solid transparent; 
+    background: transparent; 
+    text-align: center; 
+    font-size: 16px; /* 16px stops iOS auto-zoom */
+    color: #333; 
+    border-radius: 4px; 
+  }
   td input:focus { background: #fff; border: 1px solid #3498db; outline: none; }
-  td.label-col input { font-weight: bold; color: #444; text-align: left; }
+  td.label-col input { font-weight: bold; color: #444; text-align: left; width: 100%; }
 
-  /* Formatting Totals Rows with Sticky Column Overrides */
+  /* Section Dividers */
   .section-header td { background-color: #e2e8f0; font-weight: bold; text-align: center; color: #2c3e50; padding: 15px; font-size: 1em; position: static; z-index: 1; border-right: none; }
   
+  /* Bottom Totals Section */
   .totals-row td { background-color: #ecf0f1; border-top: 1px solid #bdc3c7; }
-  .totals-row td:first-child { background-color: #e8ecee; } /* Slightly darker for the sticky label */
+  .totals-row td:first-child { background-color: #e8ecee; } 
   
   .grand-total td { background-color: #27ae60; color: white; border-top: 2px solid #1e8449; }
-  .grand-total td:first-child { background-color: #229954; } /* Match the sticky label to the green row */
-  .grand-total input, .grand-total td.label-col input { color: white; font-weight: bold; font-size: 1.15em; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+  .grand-total td:first-child { background-color: #229954; } 
+  .grand-total input, .grand-total td.label-col input { color: white; font-weight: bold; font-size: 1.1em; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
-  /* Adjustments for iPad (Tablet size and up) */
+  /* iPad / Desktop Breakpoint */
   @media (min-width: 768px) {
-    body { padding: 20px; }
-    .container { padding: 30px; }
-    .header-container { flex-direction: row; justify-content: space-between; text-align: left; }
+    .container { padding: 30px; border-radius: 8px; margin: 20px auto; min-height: auto; }
+    .header-container { flex-direction: row; justify-content: space-between; }
+    h1 { font-size: 2em; text-align: left; }
     .btn { width: auto; }
-    .control-bar { flex-direction: row; justify-content: space-between; gap: 20px; }
-    .control-group input { width: 100%; text-align: center; }
+    .control-bar { grid-template-columns: 1fr 1fr 1fr; } /* Inputs go side-by-side */
   }
 
-  /* Print Styles */
-  @media print {
-    body { padding: 0; background: white; }
-    .container { box-shadow: none; padding: 0; max-width: 100%; }
-    .btn { display: none; }
-    .table-wrapper { overflow: visible; border: none; }
-    table { min-width: 100%; }
-    th:first-child, td:first-child { position: static; border-right: 1px solid #eee; }
-    input { border: none !important; background: transparent !important; }
-    .control-bar { border: 1px solid #ccc; background: none; flex-direction: row; }
-    th { background-color: #ccc !important; color: black !important; }
-    .grand-total td { background-color: #ddd !important; color: black !important; }
-    .grand-total input, .grand-total td.label-col input { color: black !important; text-shadow: none; }
-  }
 </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header-container">
-    <h1>Stairlift Comparison</h1>
+    <h1>Stairlift Comparison Tool</h1>
     <button class="btn btn-reset" onclick="newCustomer()">+ New Customer</button>
   </div>
 
@@ -135,43 +205,43 @@
           <td><input type="text" class="saveable" id="leaf_type" value="Leaf Straight"></td>
         </tr>
         <tr>
-          <td class="label-col"><input type="text" class="saveable" id="label_2" value="Base Cost of Unit ($)"></td>
+          <td class="label-col"><input type="text" class="saveable" id="label_2" value="Base Cost ($)"></td>
           <td><input type="number" class="saveable" id="acorn_unit" value="3200"></td>
           <td><input type="number" class="saveable" id="bruno_unit" value="3600"></td>
           <td><input type="number" class="saveable" id="leaf_unit" value="3200"></td>
         </tr>
         <tr>
-          <td class="label-col"><input type="text" class="saveable" id="label_3" value="Cost of Installation ($)"></td>
+          <td class="label-col"><input type="text" class="saveable" id="label_3" value="Installation ($)"></td>
           <td><input type="number" class="saveable" id="acorn_install" value="650"></td>
           <td><input type="number" class="saveable" id="bruno_install" value="600"></td>
           <td><input type="number" class="saveable" id="leaf_install" value="0"></td>
         </tr>
         <tr>
-          <td class="label-col"><input type="text" class="saveable" id="label_4" value="Standard Track Included (ft)"></td>
+          <td class="label-col"><input type="text" class="saveable" id="label_4" value="Std. Track Included (ft)"></td>
           <td><input type="number" class="saveable" id="acorn_std_track" value="15"></td>
           <td><input type="number" class="saveable" id="bruno_std_track" value="16"></td>
           <td><input type="number" class="saveable" id="leaf_std_track" value="15"></td>
         </tr>
         <tr>
-          <td class="label-col"><input type="text" class="saveable" id="label_5" value="Cost of Extra Track ($/ft)"></td>
+          <td class="label-col"><input type="text" class="saveable" id="label_5" value="Extra Track ($/ft)"></td>
           <td><input type="number" class="saveable" id="acorn_track_price" value="125"></td>
           <td><input type="number" class="saveable" id="bruno_track_price" value="100"></td>
           <td><input type="number" class="saveable" id="leaf_track_price" value="130"></td>
         </tr>
         <tr>
-          <td class="label-col"><input type="text" class="saveable" id="label_6" value="Standard Warranty"></td>
+          <td class="label-col"><input type="text" class="saveable" id="label_6" value="Warranty (Type)"></td>
           <td><input type="text" class="saveable" id="acorn_war_desc" value="1 Year Limited"></td>
           <td><input type="text" class="saveable" id="bruno_war_desc" value="2 Yr Part / Life Motor"></td>
           <td><input type="text" class="saveable" id="leaf_war_desc" value="1 Year Limited"></td>
         </tr>
         <tr>
-          <td class="label-col"><input type="text" class="saveable" id="label_7" value="Included Warranty (Years)"></td>
+          <td class="label-col"><input type="text" class="saveable" id="label_7" value="Warranty Included (Yrs)"></td>
           <td><input type="number" class="saveable" id="acorn_std_years" value="1"></td>
           <td><input type="number" class="saveable" id="bruno_std_years" value="2"></td>
           <td><input type="number" class="saveable" id="leaf_std_years" value="1"></td>
         </tr>
         <tr>
-          <td class="label-col"><input type="text" class="saveable" id="label_8" value="Ext. Warranty Cost ($/yr)"></td>
+          <td class="label-col"><input type="text" class="saveable" id="label_8" value="Ext. Warranty ($/yr)"></td>
           <td><input type="number" class="saveable" id="acorn_war_price" value="350"></td>
           <td><input type="number" class="saveable" id="bruno_war_price" value="0"></td>
           <td><input type="number" class="saveable" id="leaf_war_price" value="400"></td>
@@ -189,7 +259,7 @@
           <td><input type="number" class="saveable" id="leaf_battery_price" value="200"></td>
         </tr>
         <tr>
-          <td class="label-col"><input type="text" class="saveable" id="label_11" value="Battery Lifespan (Years)"></td>
+          <td class="label-col"><input type="text" class="saveable" id="label_11" value="Battery Life (Yrs)"></td>
           <td><input type="number" class="saveable" id="acorn_battery_life" value="3"></td>
           <td><input type="number" class="saveable" id="bruno_battery_life" value="3"></td>
           <td><input type="number" class="saveable" id="leaf_battery_life" value="3"></td>
